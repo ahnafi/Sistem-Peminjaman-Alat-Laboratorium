@@ -4,21 +4,16 @@ class User_model extends CI_Model
 {
 
 	protected $table = 'users';
-	protected $primaryKey = 'email';
+	protected $primaryKey = 'id';
 
 	public function __construct()
 	{
 		parent::__construct();
 	}
 
-//	public function register($data)
-//	{
-//		return $this->db->insert($this->table, $data);
-//	}
-
 	public function login($email, $password)
 	{
-		$user = $this->db->get_where($this->table, [$this->primaryKey => $email])->row();
+		$user = $this->db->get_where($this->table, ["email" => $email])->row();
 		if ($user && password_verify($password, $user->password)) {
 			return $user;
 		}
@@ -50,7 +45,7 @@ class User_model extends CI_Model
 
 	public function getById($id)
 	{
-		return $this->db->get_where($this->table, [$this->primary => $id])->row();
+		return $this->db->get_where($this->table, [$this->primaryKey => $id])->row();
 	}
 
 	public function insert($data)
@@ -60,12 +55,12 @@ class User_model extends CI_Model
 
 	public function update($id, $data)
 	{
-		return $this->db->update($this->table, $data, [$this->primary => $id]);
+		return $this->db->update($this->table, $data, [$this->primaryKey => $id]);
 	}
 
 	public function delete($id)
 	{
-		return $this->db->delete($this->table, [$this->primary => $id]);
+		return $this->db->delete($this->table, [$this->primaryKey => $id]);
 	}
 
 }

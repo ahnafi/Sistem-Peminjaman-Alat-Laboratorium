@@ -11,23 +11,28 @@
 	<form action="<?= base_url('mahasiswa/store') ?>" method="post">
 		<div class="mb-3">
 			<label for="nim" class="form-label">NIM</label>
-			<input type="text" name="nim" id="nim" class="form-control" maxlength="9" required>
+			<input type="text" name="nim" id="nim" class="form-control" maxlength="20" required>
 		</div>
 
 		<div class="mb-3">
 			<label for="nama" class="form-label">Nama</label>
-			<input type="text" name="nama" id="nama" class="form-control" required>
+			<input type="text" name="name" id="nama" class="form-control" required>
 		</div>
 
 		<div class="mb-3">
-			<label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-			<input type="date" name="tanggal_lahir" id="tanggal_lahir" class="form-control" required>
+			<label for="email" class="form-label">Email</label>
+			<input type="email" name="email" id="email" class="form-control" required>
+		</div>
+		<div class="mb-3">
+			<label for="password" class="form-label">Password</label>
+			<input type="password" name="password" id="password" class="form-control" required>
 		</div>
 
 		<div class="mb-3">
-			<label for="alamat" class="form-label">Alamat</label>
-			<textarea name="alamat" id="alamat" class="form-control" rows="3"></textarea>
+			<label for="password_confirm" class="form-label">Konfirmasi Password</label>
+			<input type="password" name="password_confirm" id="password_confirm" class="form-control" required>
 		</div>
+
 
 		<button type="submit" class="btn btn-success">Simpan</button>
 		<a href="<?= base_url('mahasiswa') ?>" class="btn btn-secondary">Kembali</a>

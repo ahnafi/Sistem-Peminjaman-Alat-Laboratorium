@@ -8,7 +8,6 @@ class Main extends CI_Controller
 	{
 		parent::__construct();
 		check_login();
-		check_user();
 	}
 
 	/**

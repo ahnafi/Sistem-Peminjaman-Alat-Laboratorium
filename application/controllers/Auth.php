@@ -9,7 +9,7 @@ class Auth extends CI_Controller
 		$this->load->model("User_model");
 	}
 
-	public function login()
+	public function login(): void
 	{
 		check_guest();
 

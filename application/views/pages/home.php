@@ -18,35 +18,26 @@
 
 	<!-- Menu Utama -->
 	<div class="row">
-		<div class="col-md-4 mb-2">
-			<div class="card">
-				<div class="card-body">
-					<h5 class="card-title">Mahasiswa</h5>
-					<p class="card-text">Lihat dan perbarui informasi mahasiswa</p>
-					<a href="<?= base_url('mahasiswa') ?>" class="btn btn-primary">Lihat Mahasiswa</a>
+		<?php if ($user->role == "admin"): ?>
+			<div class="col-md-4 mb-2">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Mahasiswa</h5>
+						<p class="card-text">Lihat dan perbarui informasi mahasiswa</p>
+						<a href="<?= base_url('mahasiswa') ?>" class="btn btn-primary">Lihat Mahasiswa</a>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="col-md-4 mb-2">
-			<div class="card">
-				<div class="card-body">
-					<h5 class="card-title">Matakuliah</h5>
-					<p class="card-text">Lihat dan perbarui informasi matakuliah</p>
-					<a href="<?= base_url('matakuliah') ?>" class="btn btn-primary">Lihat Matakuliah</a>
+			<div class="col-md-4 mb-2">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Peralatan lab</h5>
+						<p class="card-text">Lihat dan perbarui informasi Peralatan</p>
+						<a href="<?= base_url('tool') ?>" class="btn btn-primary">Lihat Peralatan</a>
+					</div>
 				</div>
 			</div>
-		</div>
-
-		<div class="col-md-4 mb-2">
-			<div class="card">
-				<div class="card-body">
-					<h5 class="card-title">Jadwal</h5>
-					<p class="card-text">Lihat jadwal kegiatan atau aktivitas yang Anda ikuti.</p>
-					<a href="<?= base_url('jadwal') ?>" class="btn btn-primary">Lihat Jadwal</a>
-				</div>
-			</div>
-		</div>
-
+		<?php endif; ?>
 	</div>
 </div>

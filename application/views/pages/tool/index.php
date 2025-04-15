@@ -1,6 +1,6 @@
 <!-- Modal Confirm Hapus -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
-	 aria-hidden="true">
+	aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -8,7 +8,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				Apakah Anda yakin ingin menghapus data mahasiswa ini?
+				Apakah Anda yakin ingin menghapus data ini?
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -22,10 +22,10 @@
 <div class="container mt-4">
 	<div class="row mb-3">
 		<div class="col">
-			<h1>Data Mahasiswa</h1>
+			<h1><?= $title ?? "" ?></h1>
 		</div>
 		<div class="col text-end">
-			<a href="<?= base_url('mahasiswa/add') ?>" class="btn btn-primary">+ Tambah Mahasiswa</a>
+			<a href="<?= base_url('tool/add') ?>" class="btn btn-primary"><i class="bi bi-plus-square"></i> Tambah data</a>
 		</div>
 	</div>
 
@@ -46,36 +46,37 @@
 	<div class="table-responsive">
 		<table class="table table-bordered table-striped">
 			<thead class="table-dark">
-			<tr>
-				<th>No</th>
-				<th>NIM</th>
-				<th>Email</th>
-				<th>Nama</th>
-				<th>Aksi</th>
-			</tr>
+				<tr>
+					<th>No</th>
+					<th>Id</th>
+					<th>Nama</th>
+					<th>stok</th>
+					<th>Aksi</th>
+				</tr>
 			</thead>
 			<tbody>
-			<?php if (!empty($mahasiswa)) : ?>
-				<?php $no = 1;
-				foreach ($mahasiswa as $mhs) : ?>
+				<?php if (!empty($tools)): ?>
+					<?php $no = 1;
+					foreach ($tools as $row): ?>
+						<tr>
+							<td><?= $no++ ?></td>
+							<td><?= $row['nama_alat'] ?></td>
+							<td><?= $row['deskripsi'] ?></td>
+							<td><?= $row['stok'] ?></td>
+							<td>
+								<a href="<?= base_url('tool/edit/' . $row['id']) ?>"
+									class="btn btn-sm btn-warning">Edit</a>
+								<a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+									data-bs-target="#confirmDeleteModal"
+									onclick="setDeleteUrl('<?= base_url('tool/delete/' . $row['id']) ?>')">Hapus</a>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				<?php else: ?>
 					<tr>
-						<td><?= $no++ ?></td>
-						<td><?= $mhs['nim'] ?></td>
-						<td><?= $mhs['email'] ?></td>
-						<td><?= $mhs['name'] ?></td>
-						<td>
-							<a href="<?= base_url('mahasiswa/edit/' . $mhs['id']) ?>" class="btn btn-sm btn-warning">Edit</a>
-							<a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-							   data-bs-target="#confirmDeleteModal"
-							   onclick="setDeleteUrl('<?= base_url('mahasiswa/delete/' . $mhs['id']) ?>')">Hapus</a>
-						</td>
+						<td colspan="6" class="text-center">Belum ada data.</td>
 					</tr>
-				<?php endforeach; ?>
-			<?php else : ?>
-				<tr>
-					<td colspan="6" class="text-center">Belum ada data mahasiswa.</td>
-				</tr>
-			<?php endif; ?>
+				<?php endif; ?>
 			</tbody>
 		</table>
 	</div>

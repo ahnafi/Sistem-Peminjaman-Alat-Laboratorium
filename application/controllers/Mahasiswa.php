@@ -3,116 +3,161 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Mahasiswa extends CI_Controller
 {
-	private $title = 'Mahasiswa';
-	private $page = "mahasiswa";
+    private $title = 'Mahasiswa';
+    private $page = "mahasiswa";
 
-	function __construct()
-	{
-		parent::__construct();
-		check_login();
-		$this->load->model("User_model");
-	}
+    function __construct()
+    {
+        parent::__construct();
+        check_login();
+        $this->load->model("User_model");
+        check_admin();
+    }
 
-	private function validateId($id)
-	{
-		if (!isset($id)) {
-			$this->session->set_flashdata('error', 'Data tidak ditemukan');
-			redirect($this->page);
-		}
+    private function validateId($id)
+    {
+        if (!isset($id)) {
+            $this->session->set_flashdata('error', 'Data tidak ditemukan');
+            redirect($this->page);
+        }
 
-		$data = $this->User_model->getById($id);
+        $data = $this->User_model->getById($id);
 
-		if (!$data) {
-			$this->session->set_flashdata('error', 'Data tidak ditemukan');
-			redirect($this->page);
-		}
+        if ($data->role != "mahasiswa") {
+            $this->session->set_flashdata('error', 'Data tidak ditemukan');
+            redirect($this->page);
+        }
 
-		return $data;
-	}
+        return $data;
+    }
 
-	public function index()
-	{
-		$data = [
-			"title" => "Data $this->title",
-			"page" => "$this->page/index",
-			"mahasiswa" => $this->User_model->getAllMahasiswa()
-		];
+    public function index(): void
+    {
+        $data = [
+            "title" => "Data $this->title",
+            "page" => "$this->page/index",
+            "mahasiswa" => $this->User_model->getAllMahasiswa()
+        ];
 
-		$this->load->view('layouts/default', $data);
-	}
+        $this->load->view('layouts/default', $data);
+    }
 
-	public function add()
-	{
-		$data = [
-			"title" => "Tambah $this->title Baru",
-			"page" => "$this->page/create",
-		];
+    public function add(): void
+    {
+        $data = [
+            "title" => "Tambah $this->title Baru",
+            "page" => "$this->page/create",
+        ];
 
-		$this->load->view('layouts/default', $data);
-	}
+        $this->load->view('layouts/default', $data);
+    }
 
-	public function store()
-	{
-		$this->form_validation->set_rules('nama', 'Nama', 'required');
+    public function store(): void
+    {
+        $this->form_validation->set_rules('name', 'Nama', 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email|is_unique[users.email]');
+        $this->form_validation->set_rules('nim', 'NIM', 'required|is_unique[users.nim]');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
+        $this->form_validation->set_rules('password_confirm', 'Konfirmasi Password', 'required|matches[password]');
 
-		if ($this->form_validation->run() === FALSE) {
-			$this->add();
-		} else {
-			$data = [
-				'nama_matakuliah' => $this->input->post('nama'),
-			];
 
-			$this->User_model->insert($data);
-			$this->session->set_flashdata('success', "Data $this->title berhasil ditambahkan");
-			redirect($this->page);
-		}
-	}
+        if ($this->form_validation->run() === FALSE) {
+            $this->add();
+        } else {
+            $data = [
+                'name' => $this->input->post('name'),
+                'email' => $this->input->post('email'),
+                'nim' => $this->input->post('nim'),
+                'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
+                'role' => 'mahasiswa'
+            ];
 
-	public function edit($id)
-	{
+            $this->User_model->insert($data);
+            $this->session->set_flashdata('success', "Data mahasiswa berhasil ditambahkan");
+            redirect($this->page);
+        }
+    }
 
-		$field = $this->validateId($id);
 
-		$data = [
-			"title" => "Edit $this->title " . $field->nama_matakuliah,
-			"page" => "$this->page/edit",
-			"matakuliah" => $field
-		];
+    public function edit($id): void
+    {
 
-		$this->load->view('layouts/default', $data);
-	}
+        $field = $this->validateId($id);
 
-	public function update($id)
-	{
-		$this->validateId($id);
+        $data = [
+            "title" => "Edit $this->title " . $field->name,
+            "page" => "$this->page/edit",
+            "mahasiswa" => $field
+        ];
 
-		$data = [
-			'nama_matakuliah' => $this->input->post('nama'),
-		];
+        $this->load->view('layouts/default', $data);
+    }
 
-		$update = $this->User_model->update($id, $data);
+    public function update($id): void
+    {
+        $this->validateId($id);
 
-		if ($update) {
-			$this->session->set_flashdata('success', "Data $this->title berhasil diperbarui");
-		} else {
-			$this->session->set_flashdata('error', "Gagal memperbarui data $this->title");
-		}
+        $this->form_validation->set_rules('name', 'Nama', 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 
-		redirect($this->page);
-	}
+        if ($this->form_validation->run() === false) {
+            $this->edit($id);
+        } else {
+            $data = [
+                'name' => $this->input->post('name'),
+                'email' => $this->input->post('email')
+            ];
 
-	public function delete($id)
-	{
-		$this->validateId($id);
+            $update = $this->User_model->update($id, $data);
 
-		$delete = $this->User_model->delete($id);
+            if ($update) {
+                $this->session->set_flashdata('success', "Data $this->title berhasil diperbarui");
+            } else {
+                $this->session->set_flashdata('error', "Gagal memperbarui data $this->title");
+            }
 
-		if ($delete) {
-			$this->session->set_flashdata('success', "Data $this->title berhasil dihapus");
-		} else {
-			$this->session->set_flashdata('error', "Gagal menghapus data $this->title");
-		}
+            redirect($this->page . "/edit/$id");
+        }
+    }
 
-		redirect($this->page);
-	}
+    public function update_password($id): void
+    {
+        $field = $this->validateId($id);
+
+        $this->form_validation->set_rules('password', 'Password Baru', 'required|min_length[6]');
+        $this->form_validation->set_rules('password_confirm', 'Konfirmasi Password', 'required|matches[password]');
+
+        if ($this->form_validation->run() === false) {
+            $this->edit($id);
+        } else {
+            $data = [
+                'password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT)
+            ];
+
+            $update = $this->User_model->update($id, $data);
+
+            if ($update) {
+                $this->session->set_flashdata('success', "Password mahasiswa $field->name berhasil diubah");
+            } else {
+                $this->session->set_flashdata('error', 'Gagal mengubah password');
+            }
+
+            redirect($this->page . "/edit/$id");
+        }
+    }
+
+    public function delete($id): void
+    {
+        $field = $this->validateId($id);
+
+        $delete = $this->User_model->delete($id);
+
+        if ($delete) {
+            $this->session->set_flashdata('success', "Data $this->title $field->name berhasil dihapus");
+        } else {
+            $this->session->set_flashdata('error', "Gagal menghapus data $this->title $field->name");
+        }
+
+        redirect($this->page);
+    }
 }
