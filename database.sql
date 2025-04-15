@@ -36,8 +36,8 @@ CREATE TABLE booking
 	keterangan TEXT,
 	created_at DATETIME                                 DEFAULT CURRENT_TIMESTAMP,
 
-	FOREIGN KEY (user_id) REFERENCES users (id),
-	FOREIGN KEY (alat_id) REFERENCES alat (id)
+	FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+	FOREIGN KEY (alat_id) REFERENCES alat (id) ON DELETE CASCADE
 );
 
 INSERT INTO alat (nama_alat, deskripsi, stok)

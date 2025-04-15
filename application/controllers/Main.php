@@ -8,6 +8,7 @@ class Main extends CI_Controller
 	{
 		parent::__construct();
 		check_login();
+		$this->load->model('Booking_model');
 	}
 
 	/**
@@ -30,8 +31,15 @@ class Main extends CI_Controller
 		$data = [
 			'title' => 'Welcome',
 			'page' => 'home',
-			'user' => $this->session->userdata("user")
+			'user' => $this->session->userdata("user"),
 		];
+
+		if ($data['user']->role == "mahasiswa") {
+			$data["booking"] = $this->Booking_model->getByUserId($data['user']->id);
+		} else {
+			$data["pending_count"] = $this->Booking_model->countPending();
+		}
+
 		$this->load->view('layouts/default', $data);
 	}
 

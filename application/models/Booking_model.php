@@ -18,7 +18,8 @@ class Booking_model extends CI_Model
 			->result_array();
 	}
 
-	public function checkAccepted($alatId,$tanggal){
+	public function checkAccepted($alatId, $tanggal)
+	{
 		// Cek jumlah booking yang sudah disetujui pada tanggal yang sama
 		$this->db->select('COUNT(*) as total_booking');
 		$this->db->where('alat_id', $alatId);
@@ -27,7 +28,7 @@ class Booking_model extends CI_Model
 		return $this->db->get('booking')->row();
 	}
 
-	public function checkUserBooking($alatId,$userId)
+	public function checkUserBooking($alatId, $userId)
 	{
 		$this->db->select('id');
 		$this->db->from('booking');
@@ -35,6 +36,25 @@ class Booking_model extends CI_Model
 		$this->db->where('alat_id', $alatId);
 		$this->db->where('status !=', 'ditolak');
 		return $this->db->get()->row();
+	}
+
+	public function getByUserId($id)
+	{
+		return $this->db
+			->select("booking.*, alat.nama_alat AS nama_alat")
+			->from($this->table)
+			->join('alat', 'alat.id = booking.alat_id')
+			->where('booking.user_id', $id)
+			->order_by('booking.tanggal', 'DESC')
+			->get()
+			->result_array();
+	}
+
+	public function countPending()
+	{
+		return $this->db
+			->where('status', 'pending')
+			->count_all_results($this->table);
 	}
 
 	public function getById($id)
