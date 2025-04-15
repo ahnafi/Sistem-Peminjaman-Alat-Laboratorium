@@ -9,10 +9,8 @@
 	<?php endif; ?>
 
 	<form action="<?= base_url('tool/update/' . $alat->id) ?>" method="post">
-		<div class="mb-3">
-			<label for="id" class="form-label">ID Alat</label>
-			<input type="text" id="id" class="form-control" value="<?= $alat->id ?>" readonly>
-		</div>
+
+		<input type="text" hidden id="id" class="form-control" value="<?= $alat->id ?>" readonly>
 
 		<div class="mb-3">
 			<label for="nama_alat" class="form-label">Nama Alat</label>

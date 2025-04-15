@@ -51,8 +51,8 @@
 			<thead class="table-dark">
 			<tr>
 				<th>No</th>
-				<th>Id</th>
 				<th>Nama</th>
+				<th>Deskripsi</th>
 				<th>stok</th>
 				<th>Aksi</th>
 			</tr>
