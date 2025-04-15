@@ -30,12 +30,13 @@ class Tool extends CI_Controller
 		return $data;
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$data = [
 			"title" => "Data $this->title",
 			"page" => "$this->page/index",
-			"tools" => $this->Tool_model->getAll()
+			"tools" => $this->Tool_model->getAll(),
+			"user" => $this->session->userdata("user")
 		];
 
 		$this->load->view('layouts/default', $data);
@@ -43,6 +44,8 @@ class Tool extends CI_Controller
 
 	public function add()
 	{
+		check_admin();
+
 		$data = [
 			"title" => "Tambah $this->title Baru",
 			"page" => "$this->page/create",
@@ -51,8 +54,10 @@ class Tool extends CI_Controller
 		$this->load->view('layouts/default', $data);
 	}
 
-	public function store()
+	public function store(): void
 	{
+		check_admin();
+
 		$this->form_validation->set_rules('nama_alat', 'Nama Alat', 'required');
 		$this->form_validation->set_rules('stok', 'Stok', 'required|numeric');
 		$this->form_validation->set_rules('deskripsi', 'Deskripsi', 'trim');
@@ -72,42 +77,56 @@ class Tool extends CI_Controller
 		}
 	}
 
-
-	public function edit($id)
+	public function edit($id): void
 	{
+		check_admin();
 
 		$field = $this->validateId($id);
 
 		$data = [
-			"title" => "Edit $this->title " . $field->nama_matakuliah,
+			"title" => "Edit $this->title " . $field->nama_alat,
 			"page" => "$this->page/edit",
-			"matakuliah" => $field
+			"alat" => $field
 		];
 
 		$this->load->view('layouts/default', $data);
 	}
 
-	public function update($id)
+	public function update($id): void
 	{
+		check_admin();
+
 		$this->validateId($id);
 
-		$data = [
-			'nama_matakuliah' => $this->input->post('nama'),
-		];
+		$this->form_validation->set_rules('nama_alat', 'Nama Alat', 'required');
+		$this->form_validation->set_rules('stok', 'Stok', 'required|numeric');
 
-		$update = $this->Tool_model->update($id, $data);
-
-		if ($update) {
-			$this->session->set_flashdata('success', "Data $this->title berhasil diperbarui");
+		if ($this->form_validation->run() === FALSE) {
+			$this->edit($id);
 		} else {
-			$this->session->set_flashdata('error', "Gagal memperbarui data $this->title");
-		}
+			$data = [
+				'nama_alat' => $this->input->post('nama_alat'),
+				'deskripsi' => $this->input->post('deskripsi') ?? null,
+				'stok' => $this->input->post('stok'),
+			];
 
-		redirect($this->page);
+			$update = $this->Tool_model->update($id, $data);
+
+			if ($update) {
+				$this->session->set_flashdata('success', "Data $this->title berhasil diperbarui");
+			} else {
+				$this->session->set_flashdata('error', "Gagal memperbarui data $this->title");
+			}
+
+			redirect($this->page);
+		}
 	}
 
-	public function delete($id)
+
+	public function delete($id): void
 	{
+		check_admin();
+
 		$this->validateId($id);
 
 		$delete = $this->Tool_model->delete($id);

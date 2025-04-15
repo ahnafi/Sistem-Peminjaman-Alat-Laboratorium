@@ -28,16 +28,32 @@
 					</div>
 				</div>
 			</div>
-
-			<div class="col-md-4 mb-2">
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Peralatan lab</h5>
-						<p class="card-text">Lihat dan perbarui informasi Peralatan</p>
-						<a href="<?= base_url('tool') ?>" class="btn btn-primary">Lihat Peralatan</a>
-					</div>
+		<?php endif; ?>
+		<div class="col-md-4 mb-2">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Peralatan lab</h5>
+					<p class="card-text">Lihat <?= $user->role == "admin" ? "dan perbarui" : "" ?> informasi
+						Peralatan</p>
+					<a href="<?= base_url('tool') ?>" class="btn btn-primary">Lihat Peralatan</a>
 				</div>
 			</div>
-		<?php endif; ?>
+		</div>
+
+		<div class="col-md-4 mb-2">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title"><?= $user->role == "admin" ? "Booking" : "Booking Peralatan Lab" ?> </h5>
+					<?php if ($user->role == "admin"): ?>
+						<p class="card-text">Lihat dan perbarui informasi Peminjam</p>
+						<a href="<?= base_url('booking') ?>" class="btn btn-primary">Lihat Peminjam</a>
+					<?php else: ?>
+						<p class="card-text">Pinjam alat laboratorium</p>
+						<a href="<?= base_url('booking') ?>" class="btn btn-success">Lihat data peminjam</a>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+
 	</div>
 </div>

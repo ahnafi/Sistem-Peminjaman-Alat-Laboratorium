@@ -24,12 +24,10 @@
 		<div class="col">
 			<h1><?= $title ?? "" ?></h1>
 		</div>
-		<?php if ($user->role == "admin"): ?>
-			<div class="col text-end">
-				<a href="<?= base_url('tool/add') ?>" class="btn btn-primary"><i class="bi bi-plus-square"></i> Tambah
-					data</a>
-			</div>
-		<?php endif; ?>
+		<div class="col text-end">
+			<a href="<?= base_url('booking/add') ?>" class="btn btn-primary"><i class="bi bi-plus-square"></i> Ajukan
+				Peminjaman </a>
+		</div>
 	</div>
 
 	<?php if ($this->session->flashdata('success')): ?>
@@ -51,38 +49,49 @@
 			<thead class="table-dark">
 			<tr>
 				<th>No</th>
-				<th>Id</th>
-				<th>Nama</th>
-				<th>stok</th>
+				<th>Nama Peminjam</th>
+				<th>Nama Alat</th>
+				<th>Tanggal</th>
+				<th>Status</th>
+				<th>Keterangan</th>
 				<th>Aksi</th>
 			</tr>
 			</thead>
 			<tbody>
-			<?php if (!empty($tools)): ?>
+			<?php if (!empty($booking)): ?>
 				<?php $no = 1;
-				foreach ($tools as $row): ?>
+				foreach ($booking as $row): ?>
 					<tr>
 						<td><?= $no++ ?></td>
+						<td><?= $row['nama_user'] ?></td>
 						<td><?= $row['nama_alat'] ?></td>
-						<td><?= $row['deskripsi'] ?></td>
-						<td><?= $row['stok'] ?></td>
+						<td><?= date('d-m-Y', strtotime($row['tanggal'])) ?></td>
+						<td><span
+								class="badge bg-<?= $row['status'] == 'disetujui' ? 'success' : ($row['status'] == 'ditolak' ? 'danger' : 'warning') ?>">
+                            <?= ucfirst($row['status']) ?>
+                        </span></td>
+						<td><?= $row['keterangan'] ?? '-' ?></td>
 						<td>
 							<?php if ($user->role == "admin"): ?>
-								<a href="<?= base_url('tool/edit/' . $row['id']) ?>"
+								<a href="<?= base_url('booking/edit/' . $row['id']) ?>"
 								   class="btn btn-sm btn-warning">Edit</a>
+
+								<a href="<?= base_url('booking/accept/' . $row['id']) ?>"
+								   class="btn btn-success btn-sm">Terima</a>
+								<a href="<?= base_url('booking/reject/' . $row['id']) ?>" class="btn btn-danger btn-sm">Tolak</a>
+							<?php elseif($user->id == $row["user_id"] && $row["status"] == "pending" ): ?>
+
 								<a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal"
 								   data-bs-target="#confirmDeleteModal"
-								   onclick="setDeleteUrl('<?= base_url('tool/delete/' . $row['id']) ?>')">Hapus</a>
-							<?php else : ?>
-								<a href="<?= base_url('tool/edit/' . $row['id']) ?>"
-								   class="btn btn-sm btn-warning">Pinjam</a>
+								   onclick="setDeleteUrl('<?= base_url('booking/delete/' . $row['id']) ?>')">Hapus</a>
+
 							<?php endif; ?>
 						</td>
 					</tr>
 				<?php endforeach; ?>
 			<?php else: ?>
 				<tr>
-					<td colspan="6" class="text-center">Belum ada data.</td>
+					<td colspan="7" class="text-center">Belum ada data.</td>
 				</tr>
 			<?php endif; ?>
 			</tbody>
