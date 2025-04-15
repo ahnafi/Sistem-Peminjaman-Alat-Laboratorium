@@ -57,7 +57,7 @@
 					<p class="card-text mt-2">
 						<?= $user->role == "admin" ? "Lihat dan perbarui informasi Peminjam" : "Pinjam alat laboratorium" ?>
 					</p>
-					<a href="<?= base_url('booking') ?>" class="btn btn-outline-<?= $user->role == 'admin' ? 'primary' : 'success' ?> w-100">
+					<a href="<?= base_url('booking') ?>" class="btn btn-outline-warning w-100">
 						<?= $user->role == "admin" ? "Lihat Peminjam" : "Lihat Data Peminjam" ?>
 					</a>
 				</div>
