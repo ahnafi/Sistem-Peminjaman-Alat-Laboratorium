@@ -98,14 +98,12 @@ class Mahasiswa extends CI_Controller
         $this->validateId($id);
 
         $this->form_validation->set_rules('name', 'Nama', 'required');
-        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 
         if ($this->form_validation->run() === false) {
             $this->edit($id);
         } else {
             $data = [
                 'name' => $this->input->post('name'),
-                'email' => $this->input->post('email')
             ];
 
             $update = $this->User_model->update($id, $data);

@@ -11,15 +11,12 @@
 				<li class="nav-item mx-1">
 					<a class="btn btn-info" aria-current="page" href="<?= base_url() ?>">home</a>
 				</li>
-				<!-- <li class="nav-item">
-					<a class="nav-link" href="<?= base_url("mahasiswa") ?>">mahasiswa</a>
-				</li> -->
-				<!--<li class="nav-item">
-                    <a class="nav-link" href="<?= base_url("mahasiswa") ?>">mahasiswa</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= base_url("mahasiswa") ?>">mahasiswa</a>
-                </li> -->
+
+				<li class="nav-item mx-1">
+					<a class="btn btn-info" aria-current="page" href="<?= base_url("profile") ?>">
+						<i class="bi bi-person-circle"></i> Profile</a>
+				</li>
+
 				<?php if (($user = $this->session->userdata("user")) && isset($user->name)): ?>
 					<li class="nav-item">
 						<a class="btn btn-danger" href="<?= base_url("auth/logout") ?>">Logout (<?= $user->name ?>
